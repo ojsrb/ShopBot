@@ -5,13 +5,22 @@ from discord import Intents
 from discord.ext import commands
 from discord import app_commands
 from dotenv import load_dotenv
-
-#Version of the bot
-currentVersion = "0.0.1"
+import pymongo
 
 #Load the app token
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
+SERVER = os.getenv('SERVER')
+
+#set up database
+dbclient = pymongo.MongoClient(SERVER)
+
+dbdb = dbclient["inventories"]
+
+db = dbdb["inventories"]
+
+#Version of the bot
+currentVersion = "0.0.1"
 
 intents = Intents.default()
 
@@ -39,6 +48,44 @@ async def ping(interaction: discord.Interaction):
     ephemeral = True
 
 #Main Commands go here
+
+@client.tree.command(name='createaccount')
+async def create(interaction: discord.Interaction):
+    await interaction.response.send_message(f"creating account for user {interaction.user.name}", ephemeral=True)
+    db.insert_one({
+        'user': interaction.user.id,
+        'credits': 100,
+        'items': []
+    })
+
+@client.tree.command(name='additem')
+async def additem(interaction: discord.Interaction, user: discord.User, item: str):
+    if interaction.user.id in whitelist:
+        dbuser = db.find_one({'user': user.id})
+        if dbuser is None:
+            interaction.response.send_message("User does not exist", ephemeral=True)
+            return
+        userItems = dbuser.get('items')
+        userItems.append(item)
+        db.update_one({'user': user.id}, {'$set': {'items': userItems}})
+        interaction.response.send_message(f"Added item {item} to user {user.name}", ephemeral=True)
+    else:
+        interaction.response.send_message(f"{interaction.user.mention} You are not allowed to use this command.", ephemeral=True)
+        return
+
+@client.tree.command(name='removeitem')
+async def removeitem(interaction: discord.Interaction, user: discord.User, item: str):
+    if interaction.user.id in whitelist:
+        dbuser = db.find_one({'user': user.id})
+        if dbuser is None:
+            interaction.response.send_message("User does not exist", ephemeral=True)
+            return
+        userItems = dbuser.get('items')
+        userItems.remove(item)
+        db.update_one({'user': user.id}, {'$set': {'items': userItems}})
+    else:
+        interaction.response.send_message(f"{interaction.user.mention} You are not allowed to use this command.", ephemeral=True)
+        return
 
 #End of main commands
 
