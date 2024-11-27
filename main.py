@@ -110,10 +110,13 @@ async def give(interaction: discord.Interaction, target: discord.User, item: str
     await interaction.response.send_message(f"sent {item} to {target.name}", ephemeral=True)
 
 @client.tree.command(name='inventory')
-async def inventory(interaction: discord.Interaction, share: bool):
+async def inventory(interaction: discord.Interaction, share: bool, user: discord.User=None):
     if db.find_one({'user': interaction.user.id}).get('blacklisted'):
         return
-    dbuser = db.find_one({'user': interaction.user.id})
+    if user is None:
+        dbuser = db.find_one({'user': interaction.user.id})
+    else:
+        dbuser = db.find_one({'user': user.id})
     if dbuser is None:
         return
     userItems = dbuser.get('items')
