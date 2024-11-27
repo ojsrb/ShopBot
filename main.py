@@ -31,8 +31,9 @@ client = commands.Bot(command_prefix='/', intents=intents)
 #Whitelist Owen and Jay. May be used for executive commands and stuff
 whitelist = [1131962772587020298, 800898653820551168]
 
-#Store inventories and stuff
+#assets
 
+kCoin = "https://cdn.discordapp.com/attachments/1303829235898646610/1311145788692365423/pixil-gif-drawing_1.gif?ex=6747cb2b&is=674679ab&hm=7a455d3059f15b0c40cd9a04ffed03c95e4872e0533ebbc7ca46befba35f1706&"
 
 @client.event
 async def on_ready():
@@ -139,6 +140,9 @@ async def scam(interaction: discord.Interaction, committer: discord.User, explan
                        'explanation': explanation,})
     await interaction.response.send_message(f"{committer.name} reported, thank you.", ephemeral=True)
 
+@client.tree.command(name='giftesting')
+async def giftesting(interaction: discord.Interaction):
+    await interaction.response.send_message(kCoin)
 #End of main commands
 
 #This is used to check version
