@@ -29,7 +29,7 @@ intents = Intents.default()
 client = commands.Bot(command_prefix='/', intents=intents)
 
 #Whitelist Owen and Jay. May be used for executive commands and stuff
-whitelist = [1131962772587020298, 800898653820551168]
+whitelist = [1131962772587020298, 800898653820551168, 1186745353303769239]
 
 #assets
 
@@ -187,6 +187,20 @@ async def additem(interaction: discord.Interaction, user: discord.User, name: st
     else:
         await interaction.response.send_message("Invalid Credentials!", ephemeral=True)
         return
+
+@client.tree.command(name='addcredits')
+async def additem(interaction: discord.Interaction, user: discord.User, amount: int):
+    if interaction.user.id in whitelist:
+        dbuser = db.find_one({'user': user.id})
+        if dbuser is None:
+            await interaction.response.send_message("User does not exist!", ephemeral=True)
+            return
+        credits = dbuser.get('credits')
+        credits += amount
+        db.update_one({'user': user.id}, {'$set': {'credits': credits}})
+        await interaction.response.send_message(f"Added {amount} to {user.name}!", ephemeral=True)
+    else:
+        await interaction.response.send_message("Invalid Credentials!", ephemeral=True)
 
 @client.tree.command(name='userexist')
 async def userexist(interaction: discord.Interaction, user: discord.User):
