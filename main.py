@@ -125,7 +125,7 @@ async def inventory(interaction: discord.Interaction, share: bool, user: discord
     for i in userItems:
         itemsList += f"- {i}\n"
     await interaction.response.send_message(f"""
-# {interaction.user.name}'s inventory:
+# {dbuser.get('name')}'s inventory:
 ### {userCredits} credits
 ----------------------------------------
 ## Items:
