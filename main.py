@@ -34,6 +34,7 @@ whitelist = [1131962772587020298, 800898653820551168]
 #assets
 
 kCoin = "https://cdn.discordapp.com/attachments/1303829235898646610/1311145788692365423/pixil-gif-drawing_1.gif?ex=6747cb2b&is=674679ab&hm=7a455d3059f15b0c40cd9a04ffed03c95e4872e0533ebbc7ca46befba35f1706&"
+scamForm = "https://forms.gle/Xm9dPjRxViCe9Dow7"
 
 @client.event
 async def on_ready():
@@ -120,7 +121,7 @@ async def inventory(interaction: discord.Interaction, share: bool):
     userCredits = dbuser.get('credits')
     itemsList = ""
     for i in userItems:
-        itemsList += f"{i}\n"
+        itemsList += f"- {i}\n"
     await interaction.response.send_message(f"""
 # {interaction.user.name}'s inventory:
 ### {userCredits} credits
@@ -130,19 +131,25 @@ async def inventory(interaction: discord.Interaction, share: bool):
 """, ephemeral=not share)
 
 @client.tree.command(name='scam')
-async def scam(interaction: discord.Interaction, committer: discord.User, explanation: str):
+async def scam(interaction: discord.Interaction):
     if db.find_one({'user': interaction.user.id}).get('blacklisted'):
         return
-    scamdb.insert_one({'name': committer.name,
-                       'id': committer.id,
-                       'sender': interaction.user.name,
-                       'senderid': interaction.user.id,
-                       'explanation': explanation,})
-    await interaction.response.send_message(f"{committer.name} reported, thank you.", ephemeral=True)
+
+    await interaction.response.send_message(f"Please fill out this form to report someone: {scamForm}", ephemeral=True)
 
 @client.tree.command(name='giftesting')
 async def giftesting(interaction: discord.Interaction):
     await interaction.response.send_message(kCoin)
+
+@client.tree.command(name='skibidi')
+async def skibidi(interaction: discord.Interaction):
+    await interaction.response.send_message(f"Deducting 100% of all credits from {interaction.user.name}!", ephemeral=True)
+
+@client.tree.command(name='steal')
+async def steal(interaction: discord.Interaction, target: discord.User):
+    await interaction.response.send_message(f"stealing all belongings from {target.name}!", ephemeral=True)
+    await interaction.followup.send(f"{interaction.user.name} just tried to steal! Nice Try :)", ephemeral=False)
+
 #End of main commands
 
 #This is used to check version
