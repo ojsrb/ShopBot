@@ -138,19 +138,27 @@ async def scam(interaction: discord.Interaction):
 
 @client.tree.command(name='giftesting')
 async def giftesting(interaction: discord.Interaction):
+    if db.find_one({'user': interaction.user.id}).get('blacklisted'):
+        return
     await interaction.response.send_message(kCoin)
 
 @client.tree.command(name='skibidi')
 async def skibidi(interaction: discord.Interaction):
+    if db.find_one({'user': interaction.user.id}).get('blacklisted'):
+        return
     await interaction.response.send_message(f"Deducting 100% of all credits from {interaction.user.name}!", ephemeral=True)
 
 @client.tree.command(name='steal')
 async def steal(interaction: discord.Interaction, target: discord.User):
+    if db.find_one({'user': interaction.user.id}).get('blacklisted'):
+        return
     await interaction.response.send_message(f"stealing all belongings from {target.name}!", ephemeral=True)
     await interaction.followup.send(f"{interaction.user.name} just tried to steal! Nice Try :)", ephemeral=False)
 
 @client.tree.command(name='requestitem')
 async def makeitem(interaction: discord.Interaction, name: str, purpose: str):
+    if db.find_one({'user': interaction.user.id}).get('blacklisted'):
+        return
     jay = await client.fetch_user(1131962772587020298)
     dm = await jay.create_dm()
 
@@ -168,6 +176,9 @@ async def makeitem(interaction: discord.Interaction, name: str, purpose: str):
 async def additem(interaction: discord.Interaction, user: discord.User, name: str):
     if interaction.user.id in whitelist:
         dbuser = db.find_one({'user': user.id})
+        if dbuser is None:
+            await interaction.response.send_message("User does not exist!", ephemeral=True)
+            return
         items = dbuser.get('items')
         items.append(name)
         db.update_one({'user': user.id}, {'$set': {'items': items}})
@@ -175,6 +186,18 @@ async def additem(interaction: discord.Interaction, user: discord.User, name: st
         return
     else:
         await interaction.response.send_message("Invalid Credentials!", ephemeral=True)
+        return
+
+@client.tree.command(name='userexist')
+async def userexist(interaction: discord.Interaction, user: discord.User):
+    if db.find_one({'user': interaction.user.id}).get('blacklisted'):
+        return
+    dbuser = db.find_one({'user': user.id})
+    if dbuser is None:
+        interaction.response.send_message("User does not exist!", ephemeral=True)
+        return
+    else:
+        interaction.response.send_message("User does exist!", ephemeral=True)
         return
 
 #End of main commands
