@@ -21,7 +21,7 @@ db = dbdb["inventories"]
 scamdb = dbdb['scams']
 
 #Version of the bot
-currentVersion = "0.0.1"
+currentVersion = "Beta-0.1.0"
 
 intents = Intents.default()
 
@@ -47,8 +47,7 @@ async def on_ready():
 
 @client.tree.command(name='ping')
 async def ping(interaction: discord.Interaction):
-    await interaction.response.send_message(f"{interaction.user.mention}")
-    ephemeral = True
+    await interaction.response.send_message("https://cdn.discordapp.com/attachments/1303829235898646610/1311145788692365423/pixil-gif-drawing_1.gif?ex=6747cb2b&is=674679ab&hm=7a455d3059f15b0c40cd9a04ffed03c95e4872e0533ebbc7ca46befba35f1706&s", ephemeral = True)
 
 #Main Commands go here
 
