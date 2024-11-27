@@ -159,7 +159,7 @@ async def makeitem(interaction: discord.Interaction, name: str, purpose: str):
     user: {interaction.user.name} 
     item: {name} 
     purpose: {purpose}
-    command to make: /additem {name} {interaction.user.name}
+    command to make: /additem {interaction.user.name} {name}
 """)
 
     await interaction.response.send_message(f"Sent request to Jay: Name: {name}, Purpose: {purpose}", ephemeral=True)
