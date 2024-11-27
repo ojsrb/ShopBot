@@ -150,6 +150,34 @@ async def steal(interaction: discord.Interaction, target: discord.User):
     await interaction.response.send_message(f"stealing all belongings from {target.name}!", ephemeral=True)
     await interaction.followup.send(f"{interaction.user.name} just tried to steal! Nice Try :)", ephemeral=False)
 
+@client.tree.command(name='requestitem')
+async def makeitem(interaction: discord.Interaction, name: str, purpose: str):
+    jay = await client.fetch_user(1131962772587020298)
+    dm = await jay.create_dm()
+
+    await dm.send(f"""
+    ### Item Request
+    user: {interaction.user.name} 
+    item: {name} 
+    purpose: {purpose}
+    command to make: /additem {name} {interaction.user.name}
+""")
+
+    await interaction.response.send_message(f"Sent request to Jay: Name: {name}, Purpose: {purpose}", ephemeral=True)
+
+@client.tree.command(name='additem')
+async def additem(interaction: discord.Interaction, user: discord.User, name: str):
+    if interaction.user.id in whitelist:
+        dbuser = db.find_one({'user': user.id})
+        items = dbuser.get('items')
+        items.append(name)
+        db.update_one({'user': user.id}, {'$set': {'items': items}})
+        await interaction.response.send_message(f"Created item {name}. Gave to {user.name}!", ephemeral=True)
+        return
+    else:
+        await interaction.response.send_message("Invalid Credentials!", ephemeral=True)
+        return
+
 #End of main commands
 
 #This is used to check version
