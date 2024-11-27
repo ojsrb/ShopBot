@@ -194,10 +194,10 @@ async def userexist(interaction: discord.Interaction, user: discord.User):
         return
     dbuser = db.find_one({'user': user.id})
     if dbuser is None:
-        interaction.response.send_message("User does not exist!", ephemeral=True)
+        await interaction.response.send_message("User does not exist!", ephemeral=True)
         return
     else:
-        interaction.response.send_message("User does exist!", ephemeral=True)
+        await interaction.response.send_message("User does exist!", ephemeral=True)
         return
 
 #End of main commands
