@@ -21,7 +21,7 @@ db = dbdb["inventories"]
 scamdb = dbdb['scams']
 
 #Version of the bot
-currentVersion = "Beta 0.1.1"
+currentVersion = "Beta 0.1.3"
 
 intents = Intents.default()
 
