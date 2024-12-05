@@ -162,7 +162,7 @@ async def steal(interaction: discord.Interaction, target: discord.User):
 async def makeitem(interaction: discord.Interaction, name: str, purpose: str):
     if db.find_one({'user': interaction.user.id}).get('blacklisted'):
         return
-    jay = await client.fetch_user(1131962772587020298)
+    jay = await client.fetch_user(800898653820551168)
     dm = await jay.create_dm()
 
     await dm.send(f"""
