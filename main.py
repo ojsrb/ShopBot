@@ -126,7 +126,7 @@ async def inventory(interaction: discord.Interaction, share: bool, user: discord
         itemsList += f"- {i}\n"
     await interaction.response.send_message(f"""
 # {dbuser.get('name')}'s inventory:
-### {userCredits} credits
+### {userCredits}🪙
 ----------------------------------------
 ## Items:
 {itemsList}
@@ -173,7 +173,7 @@ async def makeitem(interaction: discord.Interaction, name: str, purpose: str):
     command to make: /additem {interaction.user.name} {name}
 """)
 
-    await interaction.response.send_message(f"Sent request to Jay: Name: {name}, Purpose: {purpose}", ephemeral=True)
+    await interaction.response.send_message(f"Sent request to Owen: Name: {name}, Purpose: {purpose}", ephemeral=True)
 
 @client.tree.command(name='additem')
 async def additem(interaction: discord.Interaction, user: discord.User, name: str):
